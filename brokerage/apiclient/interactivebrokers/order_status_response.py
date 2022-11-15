@@ -1,0 +1,48 @@
+from pydantic import BaseModel
+
+
+class OrderStatusResponse(BaseModel):
+        sub_type: str
+        request_id: str
+        order_id: int
+        conidex: str
+        symbol: str
+        side: str
+        contract_description_1: str
+        listing_exchange: str
+        option_acct: str
+        company_name: str
+        size: str
+        total_size: str
+        currency: str
+        account: str
+        order_type: str
+        limit_price: str
+        stop_price: str
+        cum_fill: str
+        order_status: str
+        order_status_description: str
+        tif: str
+        fg_color: str
+        bg_color: str
+        order_not_editable: bool
+        editable_fields: str
+        cannot_cancel_order: bool
+        outside_rth: bool
+        deactivate_order: bool
+        use_price_mgmt_algo: bool
+        sec_type: str
+        available_chart_periods: str
+        order_description: str
+        order_description_with_contract: str
+        alert_active: int
+        child_order_type: str
+        size_and_fills: str
+        exit_strategy_display_price: str
+        exit_strategy_chart_description: str
+        exit_strategy_tool_availability: str
+        allowed_duplicate_opposite: bool
+        order_time: str
+        oca_group_id: str
+        order_clearing_account: str
+        average_price: str

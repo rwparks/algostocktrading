@@ -1,0 +1,26 @@
+[loggers]
+keys=root,training
+
+[handlers]
+keys=console
+
+[formatters]
+keys=default
+
+[logger_root]
+level=DEBUG
+handlers=console
+
+[logger_training]
+level=DEBUG
+handlers=console
+propagate = 0
+qualname=training
+
+[handler_console]
+class=logging.StreamHandler
+level=DEBUG
+formatter=default
+
+[formatter_default]
+format=[%(levelname)s - %(asctime)s - %(name)s] %(message)s

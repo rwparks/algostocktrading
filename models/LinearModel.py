@@ -1,0 +1,64 @@
+import pickle
+from dataclasses import dataclass, field
+import numpy as np
+import pandas as pd
+from sklearn.metrics import confusion_matrix
+from models import DataPreprocessor, LRClassifier
+
+
+@dataclass
+class LinearModel:
+    features: pd.DataFrame
+    #training_start: str = field(default=None)
+    #training_end: str = field(default=None)
+    __threshold: int = field(init=False, default=None)
+    __classifier: LRClassifier.LRClassifier = field(init=False, default=None)
+    __data: DataPreprocessor.DataPreprocessor = field(init=False)
+    __predict_test: np.ndarray = field(init=False, default=None)
+
+    def __post_init__(self):
+        self.__data = DataPreprocessor.DataPreprocessor(features=self.features)
+
+    @property
+    def classifier(self) -> LRClassifier.LRClassifier:
+        if self.__classifier is None:
+            self.__classifier = LRClassifier.LRClassifier(self.__data.train.X.scaled, self.__data.train.y)
+        return self.__classifier
+
+    def save_classifier(self, name: str):
+        with open(f'{name}.clfr', 'wb') as f:
+            #pickle.dump(self.classifier.estimator, f)
+            pickle.dump(self.classifier, f)
+
+    def save_scaler(self, name: str):
+        with open(f'{name}.sclr', 'wb') as f:
+            pickle.dump(self.scaler, f)
+
+    @property
+    def score(self) -> float:
+        return self.classifier.score(self.__data.test.X.scaled, self.__data.test.y)
+
+    @property
+    def scaler(self):
+        return self.__data.scaler
+
+    @property
+    def predict_test(self):
+        self.__predict_test = self.classifier.predict(self.__data.test.X.scaled, threshold=self.threshold)
+        return self.__predict_test
+
+    @property
+    def threshold(self):
+        return self.__threshold
+
+    @threshold.setter
+    def threshold(self, value):
+        self.__threshold = value
+
+    def show_confusion_matrix(self):
+        print(confusion_matrix(self.__data.test.y, self.predict_test))
+
+    def compare(self):
+        print(np.concatenate(
+            (self.predict_test.reshape(len(self.predict_test), 1),
+             self.__data.test.y.reshape(len(self.__data.test.y), 1)), 1))
